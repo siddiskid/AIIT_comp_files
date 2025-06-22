@@ -36,7 +36,6 @@ button_html = """
   background-color: #45a049;
 }
 </style>
-<button class="custom-button" onclick="window.parent.document.getElementById('generate-button').click()">Generate</button>
 """
 
 st.markdown(button_html, unsafe_allow_html=True)
