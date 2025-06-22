@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 
 # Define constants
-G_MODEL_NAME = 'G_MODEL_NAME' # Make sure this matches the name you saved your generator model with
+G_MODEL_NAME = 'G_MODEL' # Make sure this matches the name you saved your generator model with
 # You'll need to make sure this path is correct relative to where your app is running
 # If your model is in a subdirectory of your app, adjust the path accordingly
 MODEL_OUTPUT_PATH = '.' # Assuming your model file is in the same directory as your app.py
