@@ -21,7 +21,6 @@ try:
         st.stop() # Stop the app if the model file is not found
 
     g_model = tf.keras.models.load_model(model_path)
-    st.success("Generator model loaded successfully!")
 except Exception as e:
     st.error(f"Error loading the generator model: {e}")
     st.stop() # Stop the app if there's an error loading the model
