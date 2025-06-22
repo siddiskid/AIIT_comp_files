@@ -5,17 +5,13 @@ import matplotlib.pyplot as plt
 import os
 
 # Define constants
-G_MODEL_NAME = 'G_MODEL' # Make sure this matches the name you saved your generator model with
-# You'll need to make sure this path is correct relative to where your app is running
-# If your model is in a subdirectory of your app, adjust the path accordingly
-MODEL_OUTPUT_PATH = '.' # Assuming your model file is in the same directory as your app.py
+G_MODEL_NAME = 'G_MODEL' 
+MODEL_OUTPUT_PATH = '.' 
 LATENT_DIM = 100
 
 # Load the trained generator model
-# This will load the model when the app starts
 try:
     model_path = os.path.join(MODEL_OUTPUT_PATH, f'{G_MODEL_NAME}.keras')
-    # Check if the model file exists before attempting to load
     if not os.path.exists(model_path):
         st.error(f"Model file not found at: {model_path}")
         st.stop() # Stop the app if the model file is not found
