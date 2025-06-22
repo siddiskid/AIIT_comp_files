@@ -43,7 +43,7 @@ st.markdown(button_html, unsafe_allow_html=True)
 
 # To make the button actually trigger the Streamlit logic, you need a hidden Streamlit button
 # This hidden button is what the HTML button will "click" using JavaScript
-generate_button_clicked = st.button("Generate", key="generate-button", help="Click to generate images", label_visibility="collapsed")
+generate_button_clicked = st.button("Generate", key="generate-button", help="Click to generate images")
 
 if generate_button_clicked:
     st.subheader(f"You selected to generate digit {digit_to_generate}:")
