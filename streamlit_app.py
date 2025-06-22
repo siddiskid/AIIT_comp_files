@@ -1,7 +1,31 @@
 import streamlit as st
 import numpy as np
+import tensorflow as tf
 import matplotlib.pyplot as plt
 import os
+
+# Define constants
+G_MODEL_NAME = 'G_MODEL_NAME' # Make sure this matches the name you saved your generator model with
+# You'll need to make sure this path is correct relative to where your app is running
+# If your model is in a subdirectory of your app, adjust the path accordingly
+MODEL_OUTPUT_PATH = '.' # Assuming your model file is in the same directory as your app.py
+LATENT_DIM = 100
+
+# Load the trained generator model
+# This will load the model when the app starts
+try:
+    model_path = os.path.join(MODEL_OUTPUT_PATH, f'{G_MODEL_NAME}.keras')
+    # Check if the model file exists before attempting to load
+    if not os.path.exists(model_path):
+        st.error(f"Model file not found at: {model_path}")
+        st.stop() # Stop the app if the model file is not found
+
+    g_model = tf.keras.models.load_model(model_path)
+    st.success("Generator model loaded successfully!")
+except Exception as e:
+    st.error(f"Error loading the generator model: {e}")
+    st.stop() # Stop the app if there's an error loading the model
+
 
 st.set_page_config(layout="wide")
 
@@ -42,17 +66,29 @@ st.markdown(button_html, unsafe_allow_html=True)
 
 # To make the button actually trigger the Streamlit logic, you need a hidden Streamlit button
 # This hidden button is what the HTML button will "click" using JavaScript
+# We've removed label_visibility as it might not be supported in your Streamlit version
 generate_button_clicked = st.button("Generate", key="generate-button", help="Click to generate images")
 
 if generate_button_clicked:
-    st.subheader(f"You selected to generate digit {digit_to_generate}:")
+    st.subheader(f"Generated images for digit {digit_to_generate}:")
 
-    # You can add placeholder content here while the model is training
-    st.write("Model is currently training. Generated images will appear here after training is complete and the model is loaded.")
+    # Generate 5 images of the selected digit
+    num_images_to_generate = 5
+    samples_test = np.random.normal(0, 1, (num_images_to_generate, LATENT_DIM))
+    labels_test = np.array([int(digit_to_generate)] * num_images_to_generate).reshape((-1, 1))
 
-    # You could optionally display some placeholder images or text
-    # For example:
-    # col1, col2, col3, col4, col5 = st.columns(5)
-    # for i in range(5):
-    #     with cols[i]:
-    #         st.write(f"Placeholder {i+1}")
+    # Use the loaded generator model to make predictions
+    generated_images = g_model.predict([samples_test, labels_test])
+
+    # Display the generated images
+    col1, col2, col3, col4, col5 = st.columns(5)
+    cols = [col1, col2, col3, col4, col5]
+
+    for i in range(num_images_to_generate):
+        with cols[i]:
+            # Ensure the image is in the correct format for matplotlib (remove the channel dimension if it's 1)
+            img_to_plot = generated_images[i].reshape(28, 28)
+            plt.imshow(img_to_plot, cmap='gray')
+            plt.axis('off')
+            st.pyplot(plt)
+            plt.close()
